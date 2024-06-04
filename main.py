@@ -86,12 +86,30 @@ def get_word_data(word):
     if response is None or response.choices is None or len(response.choices) <= 0:
         return None
 
-    response_message = response.choices[0].message.content
-    response_message = re.sub(r"^```json|```$", "", response_message).strip()
-    if DEBUG_INFO:
-        print(response_message)
+    # return json.loads(response_message)
+    # Sanity check to ensure the response is as expected
+    try:
+        response_message = response.choices[0].message.content
+        response_message = re.sub(r"^```json|```$", "", response_message).strip()
+        if DEBUG_INFO:
+            print(response_message)
 
-    return json.loads(response_message)
+        word_data = json.loads(response_message)
+
+        required_keys = [
+            'word', 'chinese_meaning', 'root', 'etymology', 'derived_words',
+            'oed_definition', 'mw_definition', 'synonyms', 'antonyms',
+            'part_of_speech', 'british_ipa', 'american_ipa', 'memory_tips', 'usage_examples'
+        ]
+
+        for key in required_keys:
+            if key not in word_data:
+                raise ValueError(f"Missing key in response: {key}")
+
+        return word_data
+    except (KeyError, IndexError, json.JSONDecodeError, ValueError) as e:
+        raise ValueError(f"Invalid response format: {e}")
+    return None
 
 # Function to establish MySQL connection
 def get_mysql_connection():
@@ -102,9 +120,39 @@ def get_mysql_connection():
         database=MYSQL_DATABASE
     )
 
+# Function to flatten dictionary to string
+def flatten_dict(d):
+    return "; ".join([f"{k}: {v}" for k, v in d.items()])
+
+def flatten_list(d):
+    return "; ".join(d)
+
+# Function to remove quotes from strings
+def remove_quotes(s):
+    return s.replace("'", "").replace('"', '')
+
 # Function to insert data into MySQL database
 def insert_word_data(word, word_data, connection):
     cursor = connection.cursor()
+
+    # Check if oed_definition and mw_definition are dict or list, then flatten them
+    if isinstance(word_data['oed_definition'], dict):
+        word_data['oed_definition'] = flatten_dict(word_data['oed_definition'])
+    elif isinstance(word_data['oed_definition'], list):
+        word_data['oed_definition'] = flatten_list(word_data['oed_definition'])
+
+    if isinstance(word_data['mw_definition'], dict):
+        word_data['mw_definition'] = flatten_dict(word_data['mw_definition'])
+    elif isinstance(word_data['mw_definition'], list):
+        word_data['mw_definition'] = flatten_list(word_data['mw_definition'])
+
+    # Remove quotes from all string values in word_data
+    for key, value in word_data.items():
+        if isinstance(value, str):
+            word_data[key] = remove_quotes(value)
+
+    # compress part_of_speech
+    word_data['part_of_speech'] = word_data['part_of_speech'].replace('noun', 'n.').replace('adjective', 'adj.').replace('adverb', 'adv.').replace('verb', 'v.').replace('conjunction', 'conj.').replace('preposition', 'prep.').replace('pronoun', 'pron.')
 
     # Insert into words table
     derived_words = word_data.get('derived_words', {})
