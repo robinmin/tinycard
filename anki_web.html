@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh">
+    <meta charset="UTF-8" />
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="" />
+    <style>
+        <!-- here define the styles for anki card layout -->
+        .card {
+            font-family: arial;
+            text-align: left;
+            font-size: 20px;
+            color: black;
+            background-color: white;
+        }
+
+        .card.nightMode {
+            font-family: arial;
+            text-align: left;
+            font-size: 20px;
+            color: white;
+            background-color: #303030;
+        } /* 注意：nightMode 大小写需要完全对应*/
+
+        .replay-button svg {
+           width: 0px;
+           height: 0px;
+         }
+         .replay-button svg circle {fill: blue; }
+         .replay-button svg path {
+           stroke: white;
+           fill: green;
+        }
+
+        /*分割线的样式*/
+        .divideLine {
+            font-size: 15px;
+            color: #808080;
+            background-color: lightgray;
+            padding: 3px;
+            border-bottom: 1px solid lightgray;
+        }
+        .nightMode .divideLine {
+            font-size: 15px;
+            color: darkgray;
+            background-color: #282828;
+            padding: 3px;
+            border-bottom: 1px solid #282828;
+        }
+
+
+        /*外部链接的样式*/
+        .link {
+            font-size: 15px;
+            color: #808080;
+            padding: 5px;
+        }
+        .nightMode .link {
+            font-size: 15px;
+            color: darkgray;
+            padding: 5px;
+        }
+
+
+        /*定义的样式*/
+        .source {
+            text-align: center;
+        }
+        .win .source {
+            text-align: center;
+        }
+
+        .word {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 40px;
+        }
+
+        .phonetic {
+        }
+
+        .hints {
+            color: #999999;
+        }
+
+        .results {
+        }
+
+        .translation {
+        }
+
+        .definition {
+        }
+
+
+        .example {
+	font-size: 13px;
+        }
+
+    </style>
+    <body class="card">
+        <!-- here define the FrontSide for anki card layout -->
+        <div class="FrontSide">
+            <div>
+                {{tts en_US voices=Apple_Fred:word}}{{tts en_GB
+                voices=Apple_Daniel:word}}
+            </div>
+
+            <!--单词和发音部分-->
+            <p class="source">
+                <span class="word">{{word}}</span>
+                <br />
+                <span class="phonetic">[{{phonetic}}]</span>
+                <span class="hints">{{hints}}</span>
+            </p>
+        </div>
+
+        <!-- here define the BackSide for anki card layout -->
+        <div class="BackSide">
+            {{FrontSide}}
+            <hr id=answer>
+                <p class="results">
+                   	<!--释义部分-->
+                   	<p class="divideLine">MEANINGS</p>
+                   	<div class"translation">{{translation}}</div>
+                   	<br />
+                   	<div class"definition">{{definition}}</div>
+
+                   	<!--例句部分-->
+                   	<p class="divideLine">EXAMPLE</p>
+                   	<div class="example">{{example}}</div>
+                </p>
+        </div>
+    </body>
+</html>
