@@ -14,7 +14,6 @@
         */
 
         /*** SCREEN STYLES ***/
-
         .card {
             --border-radius: 8px;
             --front-font-size: 22px;
@@ -43,7 +42,6 @@
         }
 
         /*** NOTE ***/
-
         .card .note.front,
         .card .note.back {
             max-width: 500px;
@@ -136,7 +134,6 @@
         }
 
         /*** HINT STYLES ***/
-
         .note a.hint {
             text-decoration: underline;
         }
@@ -172,7 +169,6 @@
         }
 
         /*** IMAGE STYLES ***/
-
         .note.front > img {
             width: 100%;
             object-fit: cover;
@@ -195,7 +191,6 @@
         }
 
         /*** REPLAY BUTTON (ANDROID MOBILE APP) ***/
-
         .note .replaybutton span {
             height: 32px;
             padding: 0;
@@ -259,7 +254,6 @@
         }
 
         /*** REPLY BUTTON (DESKTOP APP) ***/
-
         .note .replay-button {
             margin: 0;
         }
@@ -330,21 +324,18 @@
         }
 
         /*** REPLAY BUTTON (FIREFOX) ***/
-
         .note .gecko audio {
             width: 48px;
             height: 32px;
         }
 
         /*** REPLAY BUTTON (CHROME) ***/
-
         .note .chrome audio {
             width: 143px;
             height: 32px;
         }
 
         /*** VARIANTS ***/
-
         .nightMode .note.note-white,
         .nightMode .note[class*="::note-white"] {
             --accent-color: #fff;
@@ -571,7 +562,6 @@
         }
 
         /*** TEXT-BLOCK CLASSES ***/
-
         .note .text-block {
             padding: 16px;
         }
@@ -585,7 +575,6 @@
         }
 
         /*** UTILITY CLASSES ***/
-
         .flex {
             display: flex;
             align-items: center;
@@ -645,7 +634,6 @@
         }
 
         /*** PILL STYLES ***/
-
         .note .text-block .pill {
             font-size: 70%;
             color: #000;
@@ -656,7 +644,6 @@
         }
 
         /*** COMBINE VARIANTS STYLES ***/
-
         .note.back[class*="note-"] .note.front:not([class*="note-"]) {
             background: unset;
         }
@@ -694,14 +681,17 @@
             display: contents;
         }
 
-        /*分割线的样式*/
+        /*** Divided line classes ***/
         .divideLine {
             font-size: 15px;
-            color: #808080;
-            background-color: lightgray;
+            font-weight: bold;
+            color: white;
+            background-color: black;
             padding: 1px;
             border-bottom: 1px solid lightgray;
+            margin: 2px;
         }
+
         .nightMode .divideLine {
             font-size: 15px;
             color: darkgray;
@@ -717,6 +707,7 @@
         }
         .hints {
             color: #999999;
+            font-size: 14px;
         }
         .synonyms {
             color: green;
@@ -724,16 +715,78 @@
         .antonyms {
             color: red;
         }
+
+        kbd {
+            background-color: #eee;
+            border-radius: 3px;
+            border: 1px solid #b4b4b4;
+            box-shadow:
+                0 1px 1px rgba(0, 0, 0, 0.2),
+                0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+            color: #333;
+            display: inline-block;
+            font-size: 0.85em;
+            font-weight: 700;
+            line-height: 1;
+            padding: 2px 4px;
+            white-space: nowrap;
+        }
+
+        .info li {
+            list-style: none;
+        }
+        .info-item label {
+            display: inline-block;
+            width: 40px;
+            height: 30px;
+            line-height: 30px;
+            vertical-align: middle;
+            text-align: justify;
+            text-align-last: justify;
+            font-weight: bold;
+        }
+
+        .info-item label::after {
+            content: " ";
+            display: inline-block;
+            width: 100%;
+        }
+
+        .example > li {
+            margin: 4px;
+        }
+
+        .tips {
+            background-color: #f4f1bb;
+            border: 1px dotted #444;
+            padding: 0.25rem;
+            margin: 0.5rem 0.25rem;
+        }
+
+        .tips::before {
+            content: "ℹ️ Tips";
+            background: #aaccff;
+            width: 5rem;
+            border-right: 1px dotted #444;
+            border-bottom: 1px dotted #444;
+            display: block;
+            text-align: center;
+            position: relative;
+            left: 1rem;
+            top: -1rem;
+            padding: 2px 10px;
+            font-weight: bold;
+        }
     </style>
     <body class="card">
         <!-- here define the FrontSide for anki card layout -->
         <div class="note front">
-            <div>
+            <div style="display: none">
                 {{tts en_US voices=Apple_Fred:word}}{{tts en_GB
                 voices=Apple_Daniel:word}}
             </div>
             <div class="body center">
-                <!-- 单词和发音部分 -->
+                <!-- word and ipa -->
                 <div class="flex flex-col">
                     <span class="word">{{word}}</span>
                     <span class="hints">{{ipa}} &nbsp; {{part_of_speech}}</span>
@@ -751,30 +804,43 @@
                     <!-- 释义部分 -->
                     <p class="divideLine">MEANINGS & BACKGROUND</p>
                     <div class="flex flex-row translation">{{translation}}</div>
-                    <br />
-                    <div class="flex flex-row definition">
-                        【OED】{{oed_definition}}
-                    </div>
-                    <div class="flex flex-row definition">
-                        【MW】{{mw_definition}}
-                    </div>
-                    <div class="flex flex-row source">
-                        【Root】{{root}} &nbsp;【Etymology】{{etymology}}
-                    </div>
-                    <div class="flex flex-row tips">
-                        【Tips】{{memory_tips}}
-                    </div>
+
+                    <ul class="info">
+                        <li class="info-item">
+                            <label>OED</label>
+                            <span class="definition">{{oed_definition}}</span>
+                        </li>
+                        <li class="info-item">
+                            <label>MW</label>
+                            <span class="definition">{{mw_definition}}</span>
+                        </li>
+                        <li class="info-item">
+                            <label>Root</label>
+                            <span class="source">{{root}}</span>
+                        </li>
+                        <li class="info-item">
+                            <label>Ety.</label>
+                            <span class="source">{{etymology}}</span>
+                        </li>
+                    </ul>
+                    <p class="tips">{{memory_tips}}</p>
 
                     <!-- 关联词汇 -->
                     <p class="divideLine">RELATED & DERIVED</p>
-                    <div class="flex flex-row">
-                        【Synonyms】<span class="synonyms">{{synonyms}}</span>
-                    </div>
-                    <div class="flex flex-row">
-                        【Antonyms】<span class="antonyms">{{antonyms}}</span>
-                    </div>
+                    <ul class="info">
+                        <li class="info-item">
+                            <label>Syn.</label>
+                            <span class="synonyms">{{synonyms}}</span>
+                        </li>
+                        <li class="info-item">
+                            <label>Ant.</label>
+                            <span class="antonyms">{{antonyms}}</span>
+                        </li>
+                        <li class="info-item">
+                            <label>Drv.</label>
+                        </li>
+                    </ul>
                     <div class="flex flex-col align-items-start">
-                        【Derived】
                         <div class="flex flex-row">
                             <ul class="derived" width="100%">
                                 {{#derived_word1}}
