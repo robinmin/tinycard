@@ -12,11 +12,16 @@ This is a repository to contain tools and data for learning English for myself.
 ```
 
 - `anki_web.html` : Normal layout for anki application. The layout result is like:
-![image/anki_web_1.jpg](image/anki_web_1.jpg)
-![image/anki_web_2.jpg](image/anki_web_2.jpg)
+<div>
+<img src="image/anki_web_1.jpg" alt="image/anki_web_1.jpg" width="360" />
+<img src="image/anki_web_2.jpg" alt="image/anki_web_2.jpg" width="360" />
+</div>
 
 - `anki_web_gpt.html` : Customized layout for anki application. The final layout is like:
-![image/anki_web_gpt_1.jpg](image/anki_web_gpt_1.jpg)
-![image/anki_web_gpt_2.jpg](image/anki_web_gpt_2.jpg)
+<div>
+<img src="image/anki_web_gpt_1.jpg" alt="image/anki_web_gpt_1.jpg" width="360" />
+<img src="image/anki_web_gpt_2.jpg" alt="image/anki_web_gpt_2.jpg" width="360" />
+</div>
+
 
 > This style is based on `Carlos Bonadeo`'s [Anki Material Flashcard](https://github.com/cdmoro/anki-material-flashcard).' Special thanks to him or her. :)
