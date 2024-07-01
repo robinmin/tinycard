@@ -19,4 +19,4 @@ This is a repository to contain tools and data for learning English for myself.
 ![image/anki_web_gpt_1.jpg](image/anki_web_gpt_1.jpg)
 ![image/anki_web_gpt_2.jpg](image/anki_web_gpt_2.jpg)
 
-> This style is based on `Carlos Bonadeo`'s [Anki Material Flashcard](https://github.com/cdmoro/anki-material-flashcard).'
+> This style is based on `Carlos Bonadeo`'s [Anki Material Flashcard](https://github.com/cdmoro/anki-material-flashcard).' Special thanks to him or her. :)
