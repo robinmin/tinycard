@@ -25,3 +25,5 @@ This is a repository to contain tools and data for learning English for myself.
 
 
 > This style is based on `Carlos Bonadeo`'s [Anki Material Flashcard](https://github.com/cdmoro/anki-material-flashcard).' Special thanks to him or her. :)
+
+-Fine tuned 8k words based on ChatGPT. Source from [here](https://github.com/Ceelog/DictionaryByGPT4).

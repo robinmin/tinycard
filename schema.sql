@@ -1,3 +1,4 @@
+use English;
 
 -- 01, create table tc_words
 CREATE TABLE IF NOT EXISTS tc_words (
@@ -48,3 +49,58 @@ CREATE TABLE IF NOT EXISTS tc_usage_examples (
     translation TEXT COMMENT '例句翻译',
     key(word)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='例句表';
+
+-- 03, create table gpt_8k_words
+CREATE TABLE IF NOT EXISTS gpt_8k_words (
+    id INT AUTO_INCREMENT PRIMARY KEY COMMENT '主键',
+
+    word        VARCHAR(256) NOT NULL comment '单词',
+    analysis    text NULL comment '词义',
+    example     text NULL comment '例句',
+    etymology   text NULL comment '词根',
+    affix       text NULL comment '词缀',
+    history     text NULL comment '历史和文化背景',
+    word_form   text NULL comment '变形',
+    memory_aid  text NULL comment '助记',
+    story       text NULL comment '小故事'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='ChatGPT 8K单词表';
+
+CREATE INDEX idx_gpt_8k_words_word ON english.gpt_8k_words(word);
+
+create view v_gpt_8k_words_abcd as
+with gpt_8k_words_abcd as(
+	select
+		gkw.word,
+		case when nd.phonetic_EN=nd.phonetic_US then nd.phonetic_EN else concat('[',nd.phonetic_EN, '] / ', nd.phonetic_US) end phonetic,
+		gkw.analysis,
+		gkw.example,
+		gkw.etymology,
+		gkw.affix,
+		gkw.history,
+		gkw.word_form,
+		gkw.memory_aid,
+		gkw.story
+	from english.gpt_8k_words as gkw
+	left join english.neodict as nd on gkw.word = nd.wordContent
+	where nd.familiarity in ('A', 'B', 'C', 'D')
+)
+select * from gpt_8k_words_abcd;
+
+create view v_gpt_8k_words_non_abcd as
+with gpt_8k_words_non_abcd as(
+	select
+		gkw.word,
+		case when nd.phonetic_EN=nd.phonetic_US then nd.phonetic_EN else concat('[',nd.phonetic_EN, '] / ', nd.phonetic_US) end phonetic,
+		gkw.analysis,
+		gkw.example,
+		gkw.etymology,
+		gkw.affix,
+		gkw.history,
+		gkw.word_form,
+		gkw.memory_aid,
+		gkw.story
+	from english.gpt_8k_words as gkw
+	left join english.neodict as nd on gkw.word = nd.wordContent
+	where nd.familiarity not in ('A', 'B', 'C', 'D')
+)
+select * from gpt_8k_words_non_abcd;
