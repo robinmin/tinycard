@@ -104,3 +104,15 @@ with gpt_8k_words_non_abcd as(
 	where nd.familiarity not in ('A', 'B', 'C', 'D')
 )
 select * from gpt_8k_words_non_abcd;
+
+SELECT * INTO OUTFILE '~/Projects2/tinycard/data/gpt_8k_words_abcd.csv'
+CHARACTER SET utf8 
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n' 
+FROM v_gpt_8k_words_abcd;
+
+SELECT * INTO OUTFILE '~/Projects2/tinycard/data/gpt_8k_words_non_abcd.csv'
+CHARACTER SET utf8 
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n' 
+FROM v_gpt_8k_words_non_abcd;

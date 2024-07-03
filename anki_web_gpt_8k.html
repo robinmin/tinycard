@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="zh">
+    <meta charset="UTF-8" />
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="" />
+    <style>
+        <!-- here define the styles for anki card layout -->
+        /*
+         * Name: Anki Material Flashcard
+         * Author: Carlos Bonadeo
+         * Version: 1.0.0
+         * Repo: https://github.com/cdmoro/anki-material-flashcard
+        */
+
+        /*** SCREEN STYLES ***/
+        .card {
+            --border-radius: 8px;
+            --front-font-size: 22px;
+            --border-top-color: #ddd;
+
+            --accent-color: #fff;
+            --card-background: #fff;
+            --front-font-color: #000;
+            --font-color: #000;
+
+            font-family: arial;
+            font-size: 17px;
+            color: var(--font-color);
+            background: #fefefe;
+            padding: 0.5rem;
+        }
+
+        .nightMode.card {
+            --accent-color: #1d1d1d;
+            --font-color: #fff;
+            --front-font-color: #fff;
+            --card-background: #1d1d1d;
+            --border-top-color: #333;
+
+            background: #121212;
+        }
+
+        /*** NOTE ***/
+        .card .note.front,
+        .card .note.back {
+            max-width: 500px;
+            box-shadow:
+                0 1px 3px rgba(0, 0, 0, 0.12),
+                0 1px 2px rgba(0, 0, 0, 0.24) !important;
+            border-radius: var(--border-radius);
+            margin: 0 auto;
+            overflow: hidden;
+            color: var(--font-color);
+        }
+
+        .card .note.back {
+            background: var(--card-background);
+        }
+
+        .note.front .body {
+            padding: 16px;
+            color: var(--front-font-color);
+            text-wrap: balance;
+        }
+
+        .note.front .header {
+            font-size: 14px;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .note.front .subheader {
+            margin-top: 0.5rem;
+            font-size: 16px;
+        }
+
+        .note.front {
+            background: var(--accent-color);
+            font-size: var(--front-font-size);
+        }
+
+        .note.back .front {
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            color: #fff;
+            font-size: var(--front-font-size);
+            box-shadow: none !important;
+        }
+
+        .nightMode .note.back .front {
+            color: #000;
+        }
+
+        .note.back > .body {
+            text-align: left;
+        }
+
+        .note.back hr {
+            margin: 0;
+            border: none;
+            border-top: var(--border-top-color) solid 1px;
+            background: none;
+        }
+
+        .note.back > hr:has(+ .body > img:first-child),
+        .note.back > hr:has(+ img:first-child) {
+            border-top-width: 0;
+        }
+
+        .note.back .subtitle {
+            font-size: 16px;
+            margin-bottom: 0.6rem;
+            opacity: 0.6;
+            margin-top: 1rem;
+        }
+
+        .note.back .subtitle:first-child {
+            margin-top: 0;
+        }
+
+        .note.back ul,
+        .note.back ol {
+            padding-left: 1rem;
+            margin: 0;
+        }
+
+        .note.front.symbol .body,
+        .note.front .body .symbol {
+            font-size: 4rem;
+        }
+
+        .note.front .body .emoji {
+            font-size: 4rem;
+        }
+
+        /*** HINT STYLES ***/
+        .note a.hint {
+            text-decoration: underline;
+        }
+
+        .note .body .hint {
+            font-style: italic;
+            display: block;
+        }
+
+        .note.back[class*="note-"] > .body .hint {
+            color: var(--accent-color);
+        }
+
+        .note.back[class*="-filled"] > .body .hint {
+            color: #000;
+        }
+
+        .nightMode .note[class*="-filled"] .body .hint {
+            color: #fff;
+        }
+
+        .note.note-white .body .hint {
+            color: #000;
+        }
+
+        .nightMode .note.back.note-white > .body .hint {
+            color: #fff;
+        }
+
+        .note.front .hint {
+            color: var(--front-font-color);
+            font-size: 16px;
+        }
+
+        /*** IMAGE STYLES ***/
+        .note.front > img {
+            width: 100%;
+            object-fit: cover;
+            max-width: 500px;
+            max-height: 200px;
+            display: block;
+        }
+
+        .note.front .body img {
+            max-height: 200px;
+            max-width: 400px;
+            vertical-align: middle;
+        }
+
+        .note.back > .body > img {
+            width: 100%;
+            object-fit: cover;
+            max-height: 200px;
+            display: block;
+        }
+
+        /*** REPLAY BUTTON (ANDROID MOBILE APP) ***/
+        .note .replaybutton span {
+            height: 32px;
+            padding: 0;
+        }
+
+        .nightMode .note .replaybutton span svg polygon {
+            fill: #fff;
+        }
+
+        .note.back[class*="note-"] > .body .replaybutton span svg polygon {
+            fill: var(--accent-color);
+            align-self: center;
+        }
+
+        .note.back[class*="-filled"] > .body .replaybutton span svg polygon {
+            fill: #000;
+        }
+
+        .nightMode
+            .note.back[class*="-filled"]
+            > .body
+            .replaybutton
+            span
+            svg
+            polygon {
+            fill: #fff;
+        }
+
+        .note.back.note-white > .body .replaybutton span svg polygon {
+            fill: #000;
+        }
+
+        .nightMode
+            .note.back.note-white
+            > .body
+            .replaybutton
+            span
+            svg
+            polygon {
+            fill: #fff;
+        }
+
+        .note.front[class*="note-"] .replaybutton svg polygon {
+            fill: #fff;
+        }
+
+        .nightMode .note.front[class*="note-"] .replaybutton svg polygon {
+            fill: #000;
+        }
+
+        .note.front[class*="-filled"] .replaybutton svg polygon {
+            fill: #000;
+        }
+
+        .nightMode .note.front[class*="-filled"] .replaybutton svg polygon {
+            fill: #fff;
+        }
+
+        .note.front.note-white .replaybutton svg polygon {
+            fill: #000;
+        }
+
+        /*** REPLY BUTTON (DESKTOP APP) ***/
+        .note .replay-button {
+            margin: 0;
+        }
+
+        .note .replay-button svg {
+            width: 0px;
+            height: 0px;
+        }
+
+        .note .replay-button svg circle {
+            fill: transparent;
+            stroke: transparent;
+        }
+
+        .note .replay-button svg path {
+            transform: scale(0.9);
+            transform-origin: center;
+            fill: #000;
+        }
+
+        .nightMode .note .replay-button svg path {
+            fill: #fff;
+        }
+
+        .note.front[class*="note-"] .replay-button svg path {
+            fill: #fff;
+        }
+
+        .nightMode .note.front[class*="note-"] .replay-button svg path {
+            fill: #000;
+        }
+
+        .note.front[class*="-filled"] .replay-button svg path {
+            fill: #000;
+        }
+
+        .nightMode .note.front[class*="-filled"] .replay-button svg path {
+            fill: #fff;
+        }
+
+        .note.back[class*="note-"] > .body .replay-button svg path {
+            fill: var(--accent-color);
+        }
+
+        .note.back[class*="-filled"] > .body .replay-button svg path {
+            fill: #000;
+        }
+
+        .nightMode
+            .note.back[class*="-filled"]
+            > .body
+            .replay-button
+            svg
+            path {
+            fill: #fff;
+        }
+
+        .note.back.note-white .body .replay-button svg path {
+            fill: #000;
+        }
+
+        .nightMode .note.back.note-white .body .replay-button svg path {
+            fill: #fff;
+        }
+
+        .note.back .note.front.note-white .replay-button svg path {
+            fill: #000;
+        }
+
+        /*** REPLAY BUTTON (FIREFOX) ***/
+        .note .gecko audio {
+            width: 48px;
+            height: 32px;
+        }
+
+        /*** REPLAY BUTTON (CHROME) ***/
+        .note .chrome audio {
+            width: 143px;
+            height: 32px;
+        }
+
+        /*** VARIANTS ***/
+        .nightMode .note.note-white,
+        .nightMode .note[class*="::note-white"] {
+            --accent-color: #fff;
+        }
+
+        .note.note-blue,
+        .note[class*="::note-blue"] {
+            --accent-color: #1976d2;
+        }
+        .nightMode .note.note-blue,
+        .nightMode .note[class*="::note-blue"] {
+            --accent-color: #42a5f5;
+        }
+        .note.note-blue-filled,
+        .note[class*="::note-blue-filled"] {
+            --card-background: #cbdef1;
+        }
+        .nightMode .note.note-blue-filled,
+        .nightMode .note[class*="::note-blue-filled"] {
+            --card-background: #243a4c;
+        }
+
+        .note.note-purple,
+        .note[class*="::note-purple"] {
+            --accent-color: #6200ee;
+        }
+        .nightMode .note.note-purple,
+        .nightMode .note[class*="::note-purple"] {
+            --accent-color: #bb86fc;
+        }
+        .note.note-purple-filled,
+        .note[class*="::note-purple-filled"] {
+            --card-background: #efcaf5;
+        }
+        .nightMode .note.note-purple-filled,
+        .nightMode .note[class*="::note-purple-filled"] {
+            --card-background: #383042;
+        }
+
+        .note.note-pink,
+        .note[class*="::note-pink"] {
+            --accent-color: #e91e63;
+        }
+        .nightMode .note.note-pink,
+        .nigthMode .note[class*="::note-pink"] {
+            --accent-color: #f06292;
+        }
+        .note.note-pink-filled,
+        .note[class*="::note-pink-filled"] {
+            --card-background: #f4dddc;
+        }
+        .nightMode .note.note-pink-filled,
+        .nightMode .note[class*="::note-pink-filled"] {
+            --card-background: #402d31;
+        }
+
+        .note.note-teal,
+        .note[class*="::note-teal"] {
+            --accent-color: #00796b;
+        }
+        .nightMode .note.note-teal,
+        .nightMode .note[class*="::note-teal"] {
+            --accent-color: #4db6ac;
+        }
+        .note.note-teal-filled,
+        .note[class*="::note-teal-filled"] {
+            --card-background: #c0fdf6;
+        }
+        .nightMode .note.note-teal-filled,
+        .nightMode .note[class*="::note-teal-filled"] {
+            --card-background: #263a38;
+        }
+
+        .note.note-green,
+        .note[class*="::note-green"] {
+            --accent-color: #388e3c;
+        }
+        .nightMode .note.note-green,
+        .nightMode .note[class*="::note-green"] {
+            --accent-color: #81c784;
+        }
+        .note.note-green-filled,
+        .note[class*="::note-green-filled"] {
+            --card-background: #b8edba;
+        }
+        .nightMode .note.note-green-filled,
+        .nightMode .note[class*="::note-green-filled"] {
+            --card-background: #1c241c;
+        }
+
+        .note.note-orange,
+        .note[class*="::note-orange"] {
+            --accent-color: #ef6c00;
+        }
+        .nightMode .note.note-orange,
+        .nightMode .note[class*="::note-orange"] {
+            --accent-color: #ffb74d;
+        }
+        .note.note-orange-filled,
+        .note[class*="::note-orange-filled"] {
+            --card-background: #ffdfc5;
+        }
+        .nightMode .note.note-orange-filled,
+        .nightMode .note[class*="::note-orange-filled"] {
+            --card-background: #322819;
+        }
+
+        .note.note-indigo,
+        .note[class*="::note-indigo"] {
+            --accent-color: #3949ab;
+        }
+        .nightMode .note.note-indigo,
+        .nightMode .note[class*="::note-indigo"] {
+            --accent-color: #9fa8da;
+        }
+        .note.note-indigo-filled,
+        .note[class*="::note-indigo-filled"] {
+            --card-background: #ccd4ff;
+        }
+        .nightMode .note.note-indigo-filled,
+        .nightMode .note[class*="::note-indigo-filled"] {
+            --card-background: #272938;
+        }
+
+        .note.note-brown,
+        .note[class*="::note-brown"] {
+            --accent-color: #6d4c41;
+        }
+        .nightMode .note.note-brown,
+        .nightMode .note[class*="::note-brown"] {
+            --accent-color: #a1887f;
+        }
+        .note.note-brown-filled,
+        .note[class*="::note-brown-filled"] {
+            --card-background: #efd3ca;
+        }
+        .nightMode .note.note-brown-filled,
+        .nightMode .note[class*="::note-brown-filled"] {
+            --card-background: #322926;
+        }
+
+        .note.note-lime,
+        .note[class*="::note-lime"] {
+            --accent-color: #9e9d24;
+        }
+        .nightMode .note.note-lime,
+        .nightMode .note[class*="::note-lime"] {
+            --accent-color: #cddc39;
+        }
+        .note.note-lime-filled,
+        .note[class*="::note-lime-filled"] {
+            --card-background: #f7f7c1;
+        }
+        .nightMode .note.note-lime-filled,
+        .nightMode .note[class*="::note-lime-filled"] {
+            --card-background: #2b2c20;
+        }
+
+        .note.note-red,
+        .note[class*="::note-red"] {
+            --accent-color: #d32f2f;
+        }
+        .nightMode .note.note-red,
+        .nightMode .note[class*="::note-red"] {
+            --accent-color: #e57373;
+        }
+        .note.note-red-filled,
+        .note[class*="::note-red-filled"] {
+            --card-background: #f7bfbf;
+        }
+        .nightMode .note.note-red-filled,
+        .nightMode .note[class*="::note-red-filled"] {
+            --card-background: #371c1c;
+        }
+
+        .note[class*="note-"] {
+            --front-font-color: #fff;
+        }
+
+        .note.front[class*="-filled"],
+        .note.back[class*="-filled"] {
+            box-shadow: none !important;
+        }
+
+        .note.back[class*="-filled"] > hr {
+            border-top-color: #aaa;
+        }
+
+        .note.back[class*="-filled"] .text-block + .text-block {
+            border-top-color: #aaa;
+        }
+
+        .nightMode .note.back[class*="-filled"] .text-block + .text-block {
+            border-top-color: #555;
+        }
+
+        .note.back[class*="-filled"] .text-block .pill {
+            background: #999;
+        }
+
+        .nightMode .note.back[class*="-filled"] > hr {
+            border-top-color: #555;
+        }
+
+        .note.front[class*="-filled"] {
+            --front-font-color: #000;
+            background-color: var(--card-background);
+            box-shadow: none;
+        }
+        .nightMode .note.front[class*="-filled"] {
+            --front-font-color: #fff;
+        }
+
+        .note.note-white {
+            --front-font-color: #000;
+        }
+
+        .nightMode .note[class*="note-"] {
+            --front-font-color: #000;
+        }
+
+        .accent-color {
+            color: var(--accent-color);
+        }
+
+        /*** TEXT-BLOCK CLASSES ***/
+        .note .text-block {
+            padding: 16px;
+        }
+
+        .note .text-block + .text-block {
+            border-top: 1px solid #ddd;
+        }
+
+        .nightMode .note .text-block + .text-block {
+            border-top: 1px solid #333;
+        }
+
+        /*** UTILITY CLASSES ***/
+        .flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .flex-row {
+            flex-direction: row;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .align-items-start {
+            align-items: start;
+        }
+
+        .gap-sm {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: start;
+        }
+
+        .align-items-center {
+            align-items: center;
+        }
+
+        .note .body a {
+            color: var(--font-color);
+        }
+
+        .note a[href^="http"]::after,
+        .note a[href^="https://"]::after
+        {
+            content: "";
+            width: 11px;
+            height: 11px;
+            margin-left: 4px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z'/%3E%3Cpath fill-rule='evenodd' d='M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z'/%3E%3C/svg%3E");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            display: inline-block;
+        }
+
+        .nightMode .note a[href^="http"]::after,
+        .nightMode .note a[href^="https://"]::after
+        {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23FFFFFF' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z'/%3E%3Cpath fill-rule='evenodd' d='M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z'/%3E%3C/svg%3E");
+        }
+
+        /*** PILL STYLES ***/
+        .note .text-block .pill {
+            font-size: 70%;
+            color: #000;
+            background: #dddddd99;
+            padding: 0.4rem 0.7rem;
+            border-radius: 1rem;
+            display: inline-block;
+        }
+
+        /*** COMBINE VARIANTS STYLES ***/
+        .note.back[class*="note-"] .note.front:not([class*="note-"]) {
+            background: unset;
+        }
+
+        .note.back[class*="note-"] .note.front:not([class*="note-"]) .body {
+            color: #000;
+        }
+
+        .nightMode
+            .note.back[class*="note-"]
+            .note.front:not([class*="note-"])
+            .body {
+            color: #fff;
+        }
+
+        .left {
+            text-align: left;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .note.centered .body *,
+        .note[class*="::centered"] .body * {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        .note.centered .body em,
+        .note.centered .body strong {
+            display: contents;
+        }
+
+        /*** Divided line classes ***/
+        .divideLine {
+            font-size: 15px;
+            font-weight: bold;
+            color: white;
+            background-color: black;
+            padding: 1px;
+            border-bottom: 1px solid lightgray;
+            margin: 2px;
+        }
+
+        .nightMode .divideLine {
+            font-size: 15px;
+            color: darkgray;
+            background-color: #282828;
+            padding: 1px;
+            border-bottom: 1px solid #282828;
+        }
+
+        .word {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 40px;
+            font-weight: "bold";
+        }
+        .hints {
+            color: #999999;
+            font-size: 14px;
+        }
+        .synonyms {
+            color: green;
+        }
+        .antonyms {
+            color: red;
+        }
+
+        kbd {
+            background-color: #eee;
+            border-radius: 3px;
+            border: 1px solid #b4b4b4;
+            box-shadow:
+                0 1px 1px rgba(0, 0, 0, 0.2),
+                0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+            color: #333;
+            display: inline-block;
+            font-size: 0.85em;
+            font-weight: 700;
+            line-height: 1;
+            padding: 2px 4px;
+            white-space: nowrap;
+        }
+
+        .info li {
+            list-style: none;
+        }
+        .info-item label {
+            display: inline-block;
+            width: 40px;
+            height: 30px;
+            line-height: 30px;
+            vertical-align: middle;
+            text-align: justify;
+            text-align-last: justify;
+            font-weight: bold;
+        }
+
+        .info-item label::after {
+            content: " ";
+            display: inline-block;
+            width: 100%;
+        }
+
+        .example > li {
+            margin: 4px;
+        }
+
+        .tips {
+            background-color: #f4f1bb;
+            border: 1px dotted #444;
+            padding: 0.25rem;
+            margin: 0.5rem 0.25rem;
+        }
+
+        .tips::before {
+            content: "ℹ️ Tips";
+            background: #aaccff;
+            width: 5rem;
+            border-right: 1px dotted #444;
+            border-bottom: 1px dotted #444;
+            display: block;
+            text-align: center;
+            position: relative;
+            left: 1rem;
+            top: -1rem;
+            padding: 2px 10px;
+            font-weight: bold;
+        }
+    </style>
+    <body class="card">
+        <!-- here define the FrontSide for anki card layout -->
+        <div class="note front">
+        <div style="display: none">
+            {{tts en_US voices=Apple_Fred:word}}{{tts en_GB voices=Apple_Daniel:word}}
+        </div>
+        <div class="body center">
+            <!-- word and ipa -->
+            <div class="flex flex-col">
+                <span class="word">{{word}}</span>
+                <span class="hints">{{phonetic}}</span>
+            </div>
+        </div>
+        </div>
+
+        <!-- here define the BackSide for anki card layout -->
+        <div class="note back">
+            {{FrontSide}}
+            <hr id="answer" />
+
+            <div class="body">
+                <div class="text-block">
+                    <!-- 释义部分 -->
+                    <p class="divideLine">MEANINGS</p>
+                    <div class="flex flex-row translation">{{analysis}}</div>
+                    <p class="tips">{{memory_aid}}</p>
+
+                    <!-- 文化历史背景 -->
+                    <p class="divideLine">HISTORY & BACKGROUND</p>
+                    <div class="flex flex-row history">{{history}}</div>
+
+                    <!-- 词源、词根、词缀 -->
+                    <p class="divideLine">SOURCE & ROOT & AFFIX</p>
+                    {{#etymology}}<div class="flex flex-row">{{etymology}}</div>{{/etymology}}
+                    {{#affix}}<div class="flex flex-row">{{affix}}</div>{{/affix}}
+                    {{#word_form}}<div class="flex flex-row">{{word_form}}</div>{{/word_form}}
+
+                    <!-- 例句 -->
+                    <p class="divideLine">EXAMPLE</p>
+                    <div class="flex flex-row">
+                        <div class="example" width="100%">
+                            {{#example}}{{example}}{{/example}}
+                        </div>
+                    </div>
+
+                    <!-- 小故事 -->
+                    <p class="divideLine">SMALL STORY</p>
+                    <div class="flex flex-row">
+                        <div class="story" width="100%">
+                            {{#story}}{{story}}{{/story}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
